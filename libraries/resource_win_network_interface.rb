@@ -67,7 +67,7 @@ class Chef
         end
 
         def netbios(arg = nil)
-          set_or_return(:netbios, arg, kind_of: [TrueClass, FalseClass, String], equal_to: [true, false, 'dhcp'])
+          set_or_return(:netbios, arg, kind_of: [TrueClass, FalseClass, String], equal_to: [true, false, 'dhcp', 'nil'])
         end
       end
     end

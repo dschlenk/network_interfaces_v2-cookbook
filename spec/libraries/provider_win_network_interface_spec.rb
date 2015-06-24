@@ -261,6 +261,25 @@ describe Chef::Provider::NetworkInterface::Win do
       provider.action_create
     end
 
+    it 'configures netbios' do
+      new_resource.netbios false
+      expect(adapter_config).to receive(:SetTcpipNetbios).with(2)
+      provider.action_create
+    end
+
+    it 'does nothing if netbios is set' do
+      new_resource.netbios 'dhcp'
+      current_resource.netbios 'dhcp'
+      expect(adapter_config).not_to receive(:SetTcpipNetbios)
+      provider.action_create
+    end
+
+    it 'does nothing if ipv4 and ipv6 protocols are unchecked' do
+      new_resource.netbios 'nil'
+      expect(adapter_config).not_to receive(:SetTcpipNetbios)
+      provider.action_create
+    end
+
     it 'reloads interface if changes made' do
       allow(adapter_config).to receive(:SetDNSDomain)
       new_resource.dns_domain 'my_dns_domain.com'
@@ -278,7 +297,7 @@ describe Chef::Provider::NetworkInterface::Win do
       provider.action_create
     end
 
-    it 'does not reloads interface if defined by user' do
+    it 'does not reload interface if defined by user' do
       allow(adapter_config).to receive(:SetDNSDomain)
       new_resource.dns_domain 'my_dns_domain.com'
       new_resource.reload false # Defined by user not to reload

@@ -34,7 +34,7 @@ class Chef
         #
         # Load current state of defined resource
         #
-        def load_current_resource # rubocop:disable MethodLength, AbcSize
+        def load_current_resource # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity
           @current_resource = Chef::Resource::NetworkInterface::Win.new(@new_resource.name)
           @current_resource.name(@new_resource.name)
           @current_resource.hw_address(@new_resource.hw_address)
@@ -55,6 +55,8 @@ class Chef
             @current_resource.netbios true
           when 2
             @current_resource.netbios false
+          when nil
+            @current_resource.netbios 'nil'
           end
 
           case nic.DHCPEnabled
@@ -123,7 +125,7 @@ class Chef
         # Manage NetBIOS as needed
         #
         def manage_netbios
-          config_netbios unless current_resource.netbios == new_resource.netbios
+          config_netbios unless current_resource.netbios == 'nil' || current_resource.netbios == new_resource.netbios
         end
 
         #
