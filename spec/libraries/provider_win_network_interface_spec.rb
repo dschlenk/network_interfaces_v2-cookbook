@@ -275,7 +275,7 @@ describe Chef::Provider::NetworkInterface::Win do
     end
 
     it 'does nothing if ipv4 and ipv6 protocols are unchecked' do
-      new_resource.netbios 'nil'
+      new_resource.netbios nil
       expect(adapter_config).not_to receive(:SetTcpipNetbios)
       provider.action_create
     end
